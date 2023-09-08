@@ -10,20 +10,45 @@ package classchallenge;
  * @author User
  */
 public class BankAccount {
+
     private int accountNo;
     private double bal;
     private String name;
     private String email;
     private String phoneNo;
-    
+
+//    CONSTRUCTORS
+    BankAccount() {
+        accountNo = 0;
+        bal = 0;
+        name = "Unset";
+        email = "Unset";
+        phoneNo = "000000000000";
+    }
+
+    BankAccount(int accNo, double bal, String name, String email, String phoneNo) {
+        this.accountNo = accNo;
+        this.bal = bal;
+        this.name = name;
+        this.email = email;
+        if (phoneNo.charAt(0) == '0' && phoneNo.matches("[0-9]+") && phoneNo.length() > 2 && phoneNo.length() <= 11) {
+            this.phoneNo = phoneNo;
+        } else {
+            this.phoneNo = "00000000000";
+        }
+    }
+
     //SETTERS
     public void setAccountNo(int accountNo) {
         this.accountNo = accountNo;
     }
 
     public void setBal(int bal) {
-        if(bal >=0) this.bal = bal;
-        else this.bal = 0;
+        if (bal >= 0) {
+            this.bal = bal;
+        } else {
+            this.bal = 0;
+        }
     }
 
     public void setName(String name) {
@@ -35,14 +60,14 @@ public class BankAccount {
     }
 
     public void setPhoneNo(String phoneNo) {
-        if(phoneNo.charAt(0) == '0' && phoneNo.matches("[0-9]+") && phoneNo.length() > 2 && phoneNo.length()<=11){
+        if (phoneNo.charAt(0) == '0' && phoneNo.matches("[0-9]+") && phoneNo.length() > 2 && phoneNo.length() <= 11) {
             this.phoneNo = phoneNo;
+        } else {
+            this.phoneNo = "00000000000";
         }
-        else this.phoneNo = "00000000000";
     }
 
     //GETTERS
-
     public int getAccountNo() {
         return accountNo;
     }
@@ -62,38 +87,46 @@ public class BankAccount {
     public String getPhoneNo() {
         return phoneNo;
     }
-    
+
     //REQUIRED METHODS
-    public boolean depositFunds(double amount){
+    public boolean depositFunds(double amount) {
         boolean result = true;
-        
-        if(amount<= 0)result = false;
-        else this.bal += amount;
-        
+
+        if (amount <= 0) {
+            result = false;
+        } else {
+            this.bal += amount;
+        }
+
         return result;
     }
-    
-    public boolean withdrawFunds(double amount){
+
+    public boolean withdrawFunds(double amount) {
         boolean result = true;
-        
-        if(this.bal < amount || amount<=0) result = false;
-        else this.bal-=amount;
-        
+
+        if (this.bal < amount || amount <= 0) {
+            result = false;
+        } else {
+            this.bal -= amount;
+        }
+
         return result;
     }
-    
-    public BankAccount(){
-        this.bal = 0;
-        this.name = "Unset";
-        this.email = "Unset";
-        this.phoneNo = "00000000000";
-        this.accountNo = 0;
+
+    public boolean transfer(BankAccount receiver, double amount) {
+        boolean success = false;
+        if (this.withdrawFunds(amount)) {
+            if (receiver.depositFunds(amount)) {
+                System.out.println(String.format("Transfer to Bank Account %d is successful!\n", receiver.getAccountNo()));
+                success = true;
+            }
+        }
+        return success;
     }
 
     @Override
     public String toString() {
         return "BankAccount{" + "accountNo=" + accountNo + ", bal=" + bal + ", name=" + name + ", email=" + email + ", phoneNo=" + phoneNo + '}';
     }
-    
-    
+
 }
